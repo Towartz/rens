@@ -763,6 +763,27 @@ case 'play': case 'ytplay': {
                 client.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '720p'}` }, { quoted: m })
             }
             break
+case 'pinbatch': case 'pinterestbatch':
+                   let pindl = require("hxz-api") 
+					if (args.length == 0) return m.reply(`Mencari foto dari pinterest\nUsage: ${prefix + command} image\nContoh: ${prefix + command}oreki | 2`)
+					const pinq1 = q.substring(0, q.indexOf('|') - 1)
+					const pinq2 = q.substring(q.lastIndexOf('|') + 2)
+					m.reply(mess.wait)
+				    pindl.pinterest(pinq1)
+						.then(res => {
+							for (let i = 0; i < pinq2; i++) {
+								if (pinq2 > 16) return m.reply('Minimal 7')
+							     client.sendFile(m.chat, res[i], '', '➣ Media Url : '+res[i])
+									.catch(err => {
+										m.reply(err.message)
+									})
+							}
+						})
+						.catch(err => {
+							m.reply(err.message)
+						})
+				  break
+
 case 'github': case 'gh': case 'githubdl': case 'ghdl':{
         let regex = /(?:https?|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
 	if (!args[0]) throw 'Ex: https://github.com/Nurutomo/wabot-aq' 
