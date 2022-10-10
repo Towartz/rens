@@ -153,10 +153,10 @@ user.afkReason = ''
         const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 
         switch (command) {
-            case "tes": {
-                m.reply(`Kenapa Kak @${pushname.split('@')[0]}`)
+            /*case "tes": {
+               m.reply(`Kenapa Kak @${pushname.split('@')[0]}`)
                 }
-                break
+                break*/
             case 'q': case 'quoted': {
                 if (!isOwner) return m.reply(mess.owner)
                 if (!m.quoted) return m.reply('Reply Pesannya!!')
@@ -645,6 +645,24 @@ client.relayMessage(m.chat, requestPaymentMessage.message, { messageId: requestP
 }
 break
 
+case 'tes': {
+let me = m.sender + '@s.whatsapp.net'
+var requestPaymentMessage = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
+"requestPaymentMessage": {
+"currencyCodeIso4217": "INR",
+"requestFrom": '6283162498175@s.whatsapp.net',
+"expiryTimestamp": "8000",
+"amount1000": "999000",
+"noteMessage": {
+"extendedTextMessage": {
+"text": `
+Kenapa kak?? ${pushname}`,
+}
+}}}), { userJid: m.chat, quoted: m })
+client.relayMessage(m.chat, requestPaymentMessage.message, { messageId: requestPaymentMessage.key.id })
+}
+break
+
 case 'menu': case 'help': {
 let me = m.sender + '@s.whatsapp.net'
 var requestPaymentMessage = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
@@ -727,23 +745,74 @@ case 'play': case 'ytplay': {
 	    case 'ytmp3': case 'ytaudio': {
                 let { yta } = require('./lib/y2mate')
                 if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 128kbps`
-              // load(`Loading...`)
+               m.reply(`Loading...`)
                 let quality = args[1] ? args[1] : '128kbps'
                 let media = await yta(text, quality)
                 if (media.filesize >= 10000000000) return m.reply('File Melebihi Batas '+util.format(media))
-                client.sendImage(m.chat, media.thumb, `➣ Title : ${media.title}\n➣ File Size : ${media.filesizeF}\n➣ Url : ${isUrl(text)}\n➣ Ext : MP3\n➣ Resolusi : ${args[1] || '128kbps'}`, m)
+           //    client.sendMessage(m.chat, media.thumb, `➣ Title : ${media.title}\n➣ File Size : ${media.filesizeF}\n➣ Url : ${isUrl(text)}\n➣ Ext : MP3\n➣ Resolusi : ${args[1] || '128kbps'}`, m)
+            //  client.sendMessage(m.chat, {image: fs.readFileSync(outputFile), caption: mess.success}, { quoted : m })
                 client.sendMessage(m.chat, { audio: { url: media.dl_link }, mimetype: 'audio/mpeg', fileName: `${media.title}.mp3` }, { quoted: m })
             }
             break
             case 'ytmp4': case 'ytvideo': {
                 let { ytv } = require('./lib/y2mate')
-                if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=PtFMh6Tccag%27 360p`
-                let quality = args[1] ? args[1] : '360p'
+                if (!text) throw `Example : ${prefix + command} https://youtube.com/watch?v=%27 720p`
+                let quality = args[1] ? args[1] : '720p'
                 let media = await ytv(text, quality)
-                if (media.filesize >= 1000000) return m.reply('File Melebihi Batas '+util.format(media))
-                client.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '360p'}` }, { quoted: m })
+                if (media.filesize >= 10000000000) return m.reply('File Melebihi Batas '+util.format(media))
+                client.sendMessage(m.chat, { video: { url: media.dl_link }, mimetype: 'video/mp4', fileName: `${media.title}.mp4`, caption: `⭔ Title : ${media.title}\n⭔ File Size : ${media.filesizeF}\n⭔ Url : ${isUrl(text)}\n⭔ Ext : MP3\n⭔ Resolusi : ${args[1] || '720p'}` }, { quoted: m })
             }
             break
+case 'github': case 'gh': case 'githubdl': case 'ghdl':{
+        let regex = /(?:https?|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
+	if (!args[0]) throw 'Ex: https://github.com/Nurutomo/wabot-aq' 
+	if (!regex.test(args[0])) throw 'Invalid URL'
+	let [, user, repo] = args[0].match(regex) || []
+	repo = repo.replace(/.git$/, '')
+	let url = `https://api.github.com/repos/${user}/${repo}/zipball`
+	let res = await fetch(url, { method: 'head' })
+	if (res.status !== 200) throw res.statusText
+	let fileName = res.headers.get('content-disposition').match(/attachment; filename=(.*)/)[1]
+	let mimetype = res.headers.get('content-type')
+	await m.reply('_In progress, please wait..._')
+	client.sendMessage(m.chat, { document: { url }, fileName, mimetype }, { quoted: m })
+	}
+        break
+
+
+        case 'mediafire': case 'md':{
+        let resd = await mediafireDl(text)
+        if (!text) throw `Linknya mana ?`
+        if (!isUrl(args[0]) && !args[0].includes('mediafire')) throw m.reply(mess.error)
+       m.reply(`Loading...`)
+        if (mediafireDl.size >= 300000) return m.reply(`*Nama :* ${resd[0].nama}
+        *Ukuran :* ${resd[0].size}
+        *Link :* ${resd[0].link}
+
+        _Maaf size melebihi batas maksimal, Silahkan klik link diatas_`)
+        m.reply(`Loading...`)       
+      let resultd = `*Nama :* ${resd[0].nama}
+        *Ukuran :* ${resd[0].size}
+
+        _File sedang dikirim, Silahkan tunggu bebepemuda menit_`
+        m.reply(resultd)
+        client.sendMessage(m.chat, { document: { url: resd[0].link }, mimetype: `${resd[0].mime}`, fileName: `${resd[0].nama}` }, { quoted: m }) 
+        }    
+        break
+
+        case 'zip': case 'zippydl': case 'zippy': case 'zippyshare':{
+        let zsExtract = require('zs-extract')
+
+        if (!args[0]) throw `Uhm...url nya mana?\n\n *Example:* ${prefix + command} https://www4.zippyshare.com/v/uBGCbNHt/file.html`
+        let resk = await zsExtract.extract(args[0])
+        let { download, filename } = resk
+        m.reply(JSON.stringify(resk, null, 2))
+        m.reply('Mohon tunggu selama *5 menit* sedang mendownload file dari _zippyshare_\n\nMinimal File *100MB* jika lebih dari yang ditentukan, Aine tidak akan mengirimkan file..!!')
+ 
+
+        client.sendFile(m.chat, download, filename, filename, m)
+        }
+        break
 	    case 'getmusic': {
                 let { yta } = require('./lib/y2mate')
                 if (!text) throw `Example : ${prefix + command} 1`
