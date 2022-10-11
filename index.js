@@ -98,7 +98,7 @@ var ucapanWaktu = 'Selamat Malam'
 		const fvideo = {key: { fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {}) },message: { "videoMessage": { "title":`${pushname}`, "h": `Hmm`,'seconds': '359996400', 'caption': `${pushname}`, 'jpegThumbnail': Dimage}}}
 		const floc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: 'Diki',jpegThumbnail: thumb}}}
 		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': 'Diki', 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;Diki,;;;\nFN:Diki\nitem1.TEL;waid=6285875158363:6285875158363\nitem1.X-ABLabel:Ponsel\nEND:VCARD`, 'jpegThumbnail': thumb, thumbnail: thumb,sendEphemeral: true}}}
-	    const fakestatus = {key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "imageMessage": {"url": "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc","mimetype": "image/jpeg","caption": '©Diki',"fileSha256": "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=","fileLength": "28777","height": 1080,"width": 1079,"mediaKey": "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=","fileEncSha256": "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=","directPath": "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69","mediaKeyTimestamp": "1610993486","jpegThumbnail": fs.readFileSync('./image/naze.jpg'),"scansSidecar": "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw=="}}}
+	    const fakestatus = {key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "imageMessage": {"url": "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc","mimetype": "image/jpeg","caption": '©Diki',"fileSha256": "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=","fileLength": "28777","height": 1080,"width": 1079,"mediaKey": "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=","fileEncSha256": "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=","directPath": "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69","mediaKeyTimestamp": "1610993486","jpegThumbnail": fs.readFileSync('./image/client.jpg'),"scansSidecar": "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw=="}}}
 		*/
  
 //document randomizer
@@ -593,15 +593,16 @@ thumbnail: Dimage,
 }
 break
 
-case 'yow': {
-            	//if (!text) throw 'Yow'
-                //let anu = await fetchJson(`https://api.akuari.my.id/short/${command}?link=${text}`)
+            case 'yow': {
                 let buttons = [
-                    {buttonId: `hehehe`, buttonText: {displayText: 'Yo, Whats up?'}, type: 1},
-                    {buttonId: `me`, buttonText: {displayText: 'Owner'}, type: 1}
+                    {buttonId: `yo`, buttonText: {displayText: 'Yo'}, type: 1},
+                    {buttonId: `me`, buttonText: {displayText: 'Owner'}, type: 1},
+                    {buttonId: `tes`, buttonText: {displayText: 'Test..'}, type: 1}
+                  //  {buttonId: `menu`, buttonText: {displayText: 'menu'}, type: 1}
                 ]
                 let buttonMessage = {
-                    text: 'Yow',
+                    image: Dimage,
+                    caption: 'Yow',
                     footer: '© Diki',
                     buttons: buttons,
                     headerType: 2
@@ -646,6 +647,35 @@ client.relayMessage(m.chat, requestPaymentMessage.message, { messageId: requestP
 break
 
 case 'tes': {
+const used = process.memoryUsage()
+                const cpus = os.cpus().map(cpu => {
+                    cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0)
+                    return cpu
+                })
+                const cpu = cpus.reduce((last, cpu, _, { length }) => {
+                    last.total += cpu.total
+                    last.speed += cpu.speed / length
+                    last.times.user += cpu.times.user
+                    last.times.nice += cpu.times.nice
+                    last.times.sys += cpu.times.sys
+                    last.times.idle += cpu.times.idle
+                    last.times.irq += cpu.times.irq
+                    return last
+                }, {
+                    speed: 0,
+                    total: 0,
+                    times: {
+                        user: 0,
+                        nice: 0,
+                        sys: 0,
+                        idle: 0,
+                        irq: 0
+                      }
+                    })
+                let timestamp = speed()
+                let latensi = speed() - timestamp
+                neww = performance.now()
+                oldd = performance.now()
 let me = m.sender + '@s.whatsapp.net'
 var requestPaymentMessage = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
 "requestPaymentMessage": {
@@ -656,7 +686,10 @@ var requestPaymentMessage = generateWAMessageFromContent(m.chat, proto.Message.f
 "noteMessage": {
 "extendedTextMessage": {
 "text": `
-Kenapa kak?? ${pushname}`,
+Kenapa kak?? ${pushname}
+Kecepatan Respon ${latensi.toFixed(4)} Second
+${oldd - neww} Miliseconds
+Runtime : ${runtime(process.uptime())}`,
 }
 }}}), { userJid: m.chat, quoted: m })
 client.relayMessage(m.chat, requestPaymentMessage.message, { messageId: requestPaymentMessage.key.id })
@@ -908,7 +941,16 @@ ${Object.entries(global.db.data.sticker).map(([key, value], index) => `${index +
             break
 
 
-
+            case 'getcase': {
+                if (!isOwner) return m.reply(mess.owner)
+                if (!text) return m.reply(`Example: ${prefix + command} query`)
+                try {
+                    m.reply("case" + text + fs.readFileSync('./main.js').toString().split('case \''+ text +'\'')[1].split("break")[0] + "break")
+                } catch {
+                    m.reply("Case tidak ditemukan")
+                }
+            }
+            break
 
 
 
@@ -1035,7 +1077,20 @@ break
 
 
 
-
+client.send5ButImg = async (jid , text = '' , footer = '', img, but = [], options = {}) =>{
+        let message = await prepareWAMessageMedia({ image: img }, { upload: client.waUploadToServer })
+        var template = generateWAMessageFromContent(jid, proto.Message.fromObject({
+        templateMessage: {
+        hydratedTemplate: {
+        imageMessage: message.imageMessage,
+               "hydratedContentText": text,
+               "hydratedFooterText": footer,
+               "hydratedButtons": but
+            }
+            }
+            }), options)
+            client.relayMessage(jid, template.message, { messageId: template.key.id })
+    }
 
 
 
